@@ -23,8 +23,17 @@ class Message(models.Model):
         return f'{self.content} - Message from {self.user.name} ({self.user.telephone}) at {self.timestamp}'
     
 class ContactKanban(models.Model):
+    STATUS_CHOICES = [
+        ('todo', 'To Do'),
+        ('doing', 'Doing'),
+        ('done', 'Done'),
+    ]
+    
     id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(Contact, on_delete=models.CASCADE, default='')
-    responsible = models.ForeignKey(User, on_delete=models.CASCADE)
+    contact = models.ForeignKey(Contact, on_delete=models.CASCADE)
+    responsible = models.ManyToManyField(User, related_name='kanban_contacts')
     labels = models.CharField(max_length=150, default='', db_index=True)
-    status = models.enums.TextChoices('To Do', 'Doing', 'Done')
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='todo')
+    
+    def __str__(self):
+        return f'Kanban: {self.contact.name} - {self.get_status_display()}'
