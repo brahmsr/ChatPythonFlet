@@ -17,9 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+rest_urls = 'api_rest.urls'
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('api_rest.urls'), name='contact_list'),
-    path('api/', include('api_rest.urls'), name='message_list'),
-    path('api/', include('api_rest.urls'), name='kanban_list'),
+    path('api/', include(rest_urls), name='contact_list'),
+    path('api/', include(rest_urls), name='message_list'),
+    path('api/', include(rest_urls), name='kanban_list'),
 ]

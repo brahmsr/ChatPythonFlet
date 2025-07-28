@@ -9,14 +9,14 @@ class UserSerializer(serializers.ModelSerializer):
 class ContactSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contact
-        fields = ['id', 'name', 'telephone', 'timestamp']
+        fields = '__all__'
 
 class MessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
-        fields = ['id', 'user.name', 'user.telephone', 'content', 'timestamp', 'read']
+        fields = '__all__'
 
 class ContactKanbanSerializer(serializers.ModelSerializer):
     class Meta:
         model = ContactKanban
-        fields = ['id', 'user.name', 'user.telephone']
+        fields = '__all__'

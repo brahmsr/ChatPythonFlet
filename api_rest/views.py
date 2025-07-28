@@ -9,6 +9,8 @@ from .serializers import *
 import json
 
 # Create your views here.
+
+## Contatos
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
 @permission_classes([IsAuthenticated])
 def contact_list(request):
@@ -30,6 +32,8 @@ def contact_list(request):
     
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
+
+## Mensagens
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
 @permission_classes([IsAuthenticated])
 def message_list(request):
@@ -46,6 +50,8 @@ def message_list(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     return Response(status=status.HTTP_400_BAD_REQUEST)
+
+## Kanban
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
 @permission_classes([IsAuthenticated])
 def contact_kanban_list(request):
