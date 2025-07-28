@@ -24,4 +24,5 @@ urlpatterns = [
     path('api/', include(rest_urls), name='contact_list'),
     path('api/', include(rest_urls), name='message_list'),
     path('api/', include(rest_urls), name='kanban_list'),
+    path('api/', include(rest_urls), name='login'),
 ]

@@ -7,6 +7,8 @@ from rest_framework import status
 from .models import *
 from .serializers import *
 import json
+from django.contrib.auth import authenticate
+from rest_framework.authtoken.models import Token
 
 # Create your views here.
 
@@ -67,4 +69,20 @@ def contact_kanban_list(request):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+## Login
+@api_view(['POST'])
+def login_view(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        username = data.get('username')
+        password = data.get('password')
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            # Gera ou recupera o token do usuário
+            token, created = Token.objects.get_or_create(user=user)
+            return Response({'token': token.key, 'username': user.username}, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'Credenciais inválidas'}, status=status.HTTP_401_UNAUTHORIZED)
     return Response(status=status.HTTP_400_BAD_REQUEST)

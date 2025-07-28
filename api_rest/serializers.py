@@ -20,3 +20,8 @@ class ContactKanbanSerializer(serializers.ModelSerializer):
     class Meta:
         model = ContactKanban
         fields = '__all__'
+
+class LoginSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username', 'password']
