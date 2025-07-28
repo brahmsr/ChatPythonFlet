@@ -10,11 +10,13 @@ class ContactSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contact
         fields = ['id', 'name', 'telephone', 'timestamp']
+        ordering = ['-timestamp']
 
 class MessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
         fields = ['id', 'user.name', 'user.telephone', 'content', 'timestamp', 'read']
+        ordering = ['-timestamp']
 
 class ContactKanbanSerializer(serializers.ModelSerializer):
     class Meta:

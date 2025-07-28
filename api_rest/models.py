@@ -3,7 +3,8 @@ from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 
 # Create your models here.
-    
+
+### Contact Model    
 class Contact(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=150, default='', db_index=True)
@@ -14,17 +15,19 @@ class Contact(models.Model):
 
     def __str__(self):
         return f'Contact: {self.name} with {self.telephone}'
-    
+
+### Message Model    
 class Message(models.Model):
     id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(Contact, on_delete=models.CASCADE, default='')
+    user = models.ForeignKey(Contact, on_delete=models.CASCADE)
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
     read = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.content} - Message from {self.user.name} ({self.user.telephone}) at {self.timestamp}'
-    
+
+### Contact Kanban Model    
 class ContactKanban(models.Model):
     STATUS_CHOICES = [
         ('todo', 'To Do'),
