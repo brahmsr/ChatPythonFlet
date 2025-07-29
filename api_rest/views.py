@@ -12,6 +12,8 @@ from rest_framework.authtoken.models import Token
 from knox.views import LoginView as KnoxLoginView
 from rest_framework import permissions
 from django.contrib.auth import login
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 
 # Create your views here.
 
@@ -107,9 +109,10 @@ def contact_kanban_list(request):
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 ## Login
+@method_decorator(csrf_exempt, name='dispatch')
 class LoginAPI(KnoxLoginView):
     permission_classes = (permissions.AllowAny,)
-
+    
     def post(self, request, format=None):
         data = request.data
         username = data.get('username')

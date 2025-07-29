@@ -128,13 +128,28 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CORS_ALLOW_ORIGINS = [
-    "http://localhost:8080",
-]
+# CORS_ALLOW_ORIGINS = [
+#     "http://localhost:8080",
+# ]
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+
+# CSRF middleware para APIs
+CSRF_COOKIE_SECURE = False
+CSRF_USE_SESSIONS = False
 
 REST_KNOX = {
-    'TOKEN_LIMIT_PER_USER': 1,
+    'TOKEN_LIMIT_PER_USER': None,
     'AUTO_REFRESH': False,
     'TOKEN_TTL': timedelta(hours=10),
     'USER_SERIALIZER': 'knox.serializers.UserSerializer',
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'knox.auth.TokenAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
 }

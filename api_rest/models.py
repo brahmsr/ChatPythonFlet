@@ -11,7 +11,6 @@ class Profile(models.Model):
     name = models.CharField(null=False, blank=False)
     lastname = models.CharField(blank=True)
     phone = models.CharField(max_length=20, blank=True)
-    bio = models.TextField(blank=True)
     avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
 
     def __str__(self):
