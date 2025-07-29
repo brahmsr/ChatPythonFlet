@@ -18,7 +18,7 @@ from django.utils.decorators import method_decorator
 # Create your views here.
 
 ## Contatos
-@api_view(['GET', 'POST', 'PUT', 'DELETE'])
+@api_view(['GET', 'POST', 'DELETE'])
 @permission_classes([IsAuthenticated])
 def contact_list(request, id: str):
     # retorna todos os contatos
@@ -37,31 +37,42 @@ def contact_list(request, id: str):
                 return Response(status=status.HTTP_404_NOT_FOUND)
             serializer = ContactSerializer(contact)
             return Response(serializer.data)
-        
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def contact_update(request, id: str):    
     # atualiza um contato
-    elif request.method == 'PUT':
+    if request.method == 'PUT':
         try:
             contact = Contact.objects.get(id=id)
+
         except Contact.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
+        
         data = json.loads(request.body)
         serializer = ContactSerializer(contact, data=data)
+
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
+        
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def contact_delete(request, id: str):
     # deleta um contato
-    elif request.method == 'DELETE':
+    if request.method == 'DELETE':
         try:
             contact = Contact.objects.get(id=id)
         except Contact.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         contact.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-        
-    # cria um novo contato
-    elif request.method == 'POST':
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def contact_create(request):
+    if request.method == 'POST':
         data = json.loads(request.body)
         serializer = ContactSerializer(data=data)
         if serializer.is_valid():

@@ -7,6 +7,11 @@ from .import views
 
 urlpatterns = [
     path('contacts/', views.contact_list, name='contact_list'),
+    path('contacts/<int:id>/', views.contact_list, name='contact_detail'),
+    path('contacts/create/', views.contact_create, name='contact_create'),
+    path('contacts/<int:id>/update/', views.contact_update, name='contact_update'),
+    path('contacts/<int:id>/delete/', views.contact_delete, name='contact_delete'),
+    
     path('messages/', views.message_list, name='message_list'),
     path('kanban/', views.contact_kanban_list, name='contact_kanban'),
     # path('kanban/<int:pk>/', views.contact_kanban_detail, name='contact_kanban_detail'),

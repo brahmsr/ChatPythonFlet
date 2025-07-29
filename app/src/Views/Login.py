@@ -1,5 +1,6 @@
 import flet as ft
 import requests
+from datetime import datetime, timezone
 
 class Login(ft.View):
     def __init__(
@@ -142,7 +143,7 @@ class Login(ft.View):
         from datetime import datetime
         if token and expiry:
             # Verifica se o token não expirou
-            if datetime.now(datetime.timezone.utc) < datetime.fromisoformat(expiry.replace("Z", "+00:00")):
+            if datetime.now(timezone.utc) < datetime.fromisoformat(expiry.replace("Z", "+00:00")):
                 self.page.go('/')
 
 class ChatBackground(ft.Container):
