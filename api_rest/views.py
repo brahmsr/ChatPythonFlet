@@ -9,6 +9,9 @@ from .serializers import *
 import json
 from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
+from knox.views import LoginView as KnoxLoginView
+from rest_framework import permissions
+from django.contrib.auth import login
 
 # Create your views here.
 
@@ -104,29 +107,15 @@ def contact_kanban_list(request):
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 ## Login
-@api_view(['POST'])
-def login_view(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
+class LoginAPI(KnoxLoginView):
+    permission_classes = (permissions.AllowAny,)
+
+    def post(self, request, format=None):
+        data = request.data
         username = data.get('username')
         password = data.get('password')
         user = authenticate(username=username, password=password)
         if user is not None:
-            # Gera ou recupera o token do usuário
-            token, created = Token.objects.get_or_create(user=user)
-            return Response({'token': token.key, 'username': user.username}, status=status.HTTP_200_OK)
-        else:
-            return Response({'error': 'Credenciais inválidas'}, status=status.HTTP_401_UNAUTHORIZED)
-    return Response(status=status.HTTP_400_BAD_REQUEST)
-
-## Logout
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def logout_view(request):
-    if request.method == 'POST':
-
-        # Remove o token do usuário
-        request.user.auth_token.delete()
-
-        return Response(status=status.HTTP_200_OK)
-    return Response(status=status.HTTP_400_BAD_REQUEST)
+            login(request, user)
+            return super().post(request, format=None)
+        return Response({'error': 'Credenciais inválidas'}, status=status.HTTP_401_UNAUTHORIZED)

@@ -1,5 +1,7 @@
 from django.contrib import admin
 from django.urls import path
+from knox import views as knox_views
+from .views import LoginAPI
 
 from .import views
 
@@ -17,7 +19,7 @@ urlpatterns = [
     # path('kanban/<int:pk>/messages/<int:message_pk>/update/', views.message_update, name='message_update'),
     # path('kanban/<int:pk>/messages/<int:message_pk>/delete/', views.message_delete, name='message_delete'),
     
-    path('login/', views.login_view, name='login'),
-    path('logout/', views.logout_view, name='logout'),
+    path('login/', LoginAPI.as_view(), name='login'),
+    path('logout/', knox_views.LogoutView.as_view(), name='logout'),
     # path('register/', views.register_view, name='register')
 ]

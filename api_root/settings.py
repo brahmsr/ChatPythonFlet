@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -39,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
+    'knox',
     'corsheaders',
     'api_rest',
 ]
@@ -129,3 +131,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOW_ORIGINS = [
     "http://localhost:8080",
 ]
+
+REST_KNOX = {
+    'TOKEN_LIMIT_PER_USER': 1,
+    'AUTO_REFRESH': False,
+    'TOKEN_TTL': timedelta(hours=10),
+    'USER_SERIALIZER': 'knox.serializers.UserSerializer',
+}

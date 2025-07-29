@@ -54,6 +54,12 @@ class Login(ft.View):
             )
         )
 
+        # Lembrar-se de mim
+        self.radio_remember = ft.Checkbox(
+            label="Lembrar-se de mim",
+            value=False
+            )
+
         self.controls = [
             ft.Stack(
                 controls=[
@@ -71,7 +77,8 @@ class Login(ft.View):
                                         self.titleLogin,
                                         self.username,
                                         self.password,
-                                        self.login_button
+                                        self.login_button,
+                                        self.radio_remember
                                     ],
                                     alignment=ft.MainAxisAlignment.CENTER,
                                     horizontal_alignment=ft.CrossAxisAlignment.CENTER,

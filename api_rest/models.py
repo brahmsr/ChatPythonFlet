@@ -8,9 +8,10 @@ from django.dispatch import receiver
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
-    name = models.DateField(null=False, blank=False)
-    lastname = models.DateField(null=True, blank=True)
+    name = models.CharField(null=False, blank=False)
+    lastname = models.CharField(blank=True)
     phone = models.CharField(max_length=20, blank=True)
+    bio = models.TextField(blank=True)
     avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
 
     def __str__(self):
@@ -19,9 +20,23 @@ class Profile(models.Model):
 @receiver(post_save, sender=User)
 def create_or_update_user_profile(sender, instance, created, **kwargs):
     if created:
-        Profile.objects.create(user=instance)
+        Profile.objects.create(
+            user=instance,
+            name=instance.first_name or "Nome",
+            lastname=instance.last_name or "",
+        )
     else:
-        instance.profile.save()
+        try:
+            profile = instance.profile
+            profile.name = instance.first_name or "Nome"
+            profile.lastname = instance.last_name or ""
+            profile.save()
+        except Profile.DoesNotExist:
+            Profile.objects.create(
+                user=instance,
+                name=instance.first_name or "Nome",
+                lastname=instance.last_name or "",
+            )
     
 class Contact(models.Model):
     id = models.AutoField(primary_key=True)
