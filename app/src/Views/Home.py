@@ -1,7 +1,6 @@
 import flet as ft
 import requests
 from datetime import datetime
-from ..Components.NavigationRail import NavigationRail
 
 class Home(ft.View):
     def __init__(
@@ -51,12 +50,6 @@ class Home(ft.View):
                 padding=ft.padding.all(10),
                 shape=ft.RoundedRectangleBorder(radius=10)
             )
-        )
-        
-        # Navigation Rail
-        self.nav_rail = NavigationRail(
-            page=page,
-            on_destination_change=self.on_nav_change
         )
         
         # Main content
@@ -114,7 +107,6 @@ class Home(ft.View):
                     ),
                     ft.Row(
                         controls=[
-                            self.nav_rail,
                             ft.VerticalDivider(width=1),
                             self.main_content
                         ],
