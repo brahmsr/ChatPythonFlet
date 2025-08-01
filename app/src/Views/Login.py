@@ -1,13 +1,17 @@
 import flet as ft
 import requests
+from datetime import datetime, timezone
 
 class Login(ft.View):
     def __init__(
             self,
             page: ft.Page):
         super().__init__()
+        self.page = page
         self.route = '/login'
         self.padding = ft.padding.all(0)
+
+        self.check_token()
 
         # Campos de login
         self.imageLogo = ft.Image(
@@ -54,6 +58,12 @@ class Login(ft.View):
             )
         )
 
+        # Lembrar-se de mim
+        self.radio_remember = ft.Checkbox(
+            label="Lembrar-se de mim",
+            value=False
+            )
+
         self.controls = [
             ft.Stack(
                 controls=[
@@ -71,7 +81,8 @@ class Login(ft.View):
                                         self.titleLogin,
                                         self.username,
                                         self.password,
-                                        self.login_button
+                                        self.radio_remember,
+                                        self.login_button,
                                     ],
                                     alignment=ft.MainAxisAlignment.CENTER,
                                     horizontal_alignment=ft.CrossAxisAlignment.CENTER,
@@ -80,7 +91,7 @@ class Login(ft.View):
                                 padding=40,
                                 bgcolor=ft.Colors.WHITE,
                                 border_radius=20,
-                                width=380, height=420
+                                width=380, height=470
                             ),
                             elevation=8,
                         ),
@@ -103,23 +114,37 @@ class Login(ft.View):
             response = requests.post(url, json=payload)
             if response.status_code == 200:
                 # Login bem-sucedido
-                token = response.json().get("token")
-                # Você pode salvar o token para uso futuro, se necessário
+                data = response.json()
+                token = data.get("token")
+                expiry = data.get("expiry")
+                if self.radio_remember.value:
+                # Salva token e expiry localmente
+                    self.page.client_storage.set("token", token)
+                    self.page.client_storage.set("expiry", expiry)
                 self.page.go('/')
             else:
-                self.page.show_snack_bar(
-                    ft.SnackBar(
-                        content=ft.Text("Usuário ou senha inválidos!"),
-                        bgcolor=ft.Colors.RED_400
-                    )
-                )
-        except Exception as ex:
-            self.page.show_snack_bar(
-                ft.SnackBar(
-                    content=ft.Text(f"Erro de conexão: {ex}"),
+                self.page.snack_bar = ft.SnackBar(
+                    content=ft.Text("Usuário ou senha inválidos!"),
                     bgcolor=ft.Colors.RED_400
                 )
+                self.page.snack_bar.open = True
+                self.page.update()
+        except Exception as ex:
+            self.page.snack_bar = ft.SnackBar(
+                content=ft.Text(f"Erro de conexão: {ex}"),
+                bgcolor=ft.Colors.RED_400
             )
+            self.page.snack_bar.open = True
+            self.page.update()
+    
+    def check_token(self):
+        token = self.page.client_storage.get("token")
+        expiry = self.page.client_storage.get("expiry")
+        from datetime import datetime
+        if token and expiry:
+            # Verifica se o token não expirou
+            if datetime.now(timezone.utc) < datetime.fromisoformat(expiry.replace("Z", "+00:00")):
+                self.page.go('/')
 
 class ChatBackground(ft.Container):
     def __init__(

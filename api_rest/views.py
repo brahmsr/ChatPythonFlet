@@ -9,11 +9,16 @@ from .serializers import *
 import json
 from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
+from knox.views import LoginView as KnoxLoginView
+from rest_framework import permissions
+from django.contrib.auth import login
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 
 # Create your views here.
 
 ## Contatos
-@api_view(['GET', 'POST', 'PUT', 'DELETE'])
+@api_view(['GET', 'POST', 'DELETE'])
 @permission_classes([IsAuthenticated])
 def contact_list(request, id: str):
     # retorna todos os contatos
@@ -32,31 +37,42 @@ def contact_list(request, id: str):
                 return Response(status=status.HTTP_404_NOT_FOUND)
             serializer = ContactSerializer(contact)
             return Response(serializer.data)
-        
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def contact_update(request, id: str):    
     # atualiza um contato
-    elif request.method == 'PUT':
+    if request.method == 'PUT':
         try:
             contact = Contact.objects.get(id=id)
+
         except Contact.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
+        
         data = json.loads(request.body)
         serializer = ContactSerializer(contact, data=data)
+
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
+        
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def contact_delete(request, id: str):
     # deleta um contato
-    elif request.method == 'DELETE':
+    if request.method == 'DELETE':
         try:
             contact = Contact.objects.get(id=id)
         except Contact.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         contact.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-        
-    # cria um novo contato
-    elif request.method == 'POST':
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def contact_create(request):
+    if request.method == 'POST':
         data = json.loads(request.body)
         serializer = ContactSerializer(data=data)
         if serializer.is_valid():
@@ -104,29 +120,16 @@ def contact_kanban_list(request):
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 ## Login
-@api_view(['POST'])
-def login_view(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
+@method_decorator(csrf_exempt, name='dispatch')
+class LoginAPI(KnoxLoginView):
+    permission_classes = (permissions.AllowAny,)
+    
+    def post(self, request, format=None):
+        data = request.data
         username = data.get('username')
         password = data.get('password')
         user = authenticate(username=username, password=password)
         if user is not None:
-            # Gera ou recupera o token do usuário
-            token, created = Token.objects.get_or_create(user=user)
-            return Response({'token': token.key, 'username': user.username}, status=status.HTTP_200_OK)
-        else:
-            return Response({'error': 'Credenciais inválidas'}, status=status.HTTP_401_UNAUTHORIZED)
-    return Response(status=status.HTTP_400_BAD_REQUEST)
-
-## Logout
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def logout_view(request):
-    if request.method == 'POST':
-
-        # Remove o token do usuário
-        request.user.auth_token.delete()
-
-        return Response(status=status.HTTP_200_OK)
-    return Response(status=status.HTTP_400_BAD_REQUEST)
+            login(request, user)
+            return super().post(request, format=None)
+        return Response({'error': 'Credenciais inválidas'}, status=status.HTTP_401_UNAUTHORIZED)
