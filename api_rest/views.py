@@ -14,6 +14,7 @@ from rest_framework import permissions
 from django.contrib.auth import login
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
+from django.contrib.auth.models import User
 
 # Create your views here.
 
@@ -118,6 +119,22 @@ def contact_kanban_list(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     return Response(status=status.HTTP_400_BAD_REQUEST)
+
+## Dashboard
+@api_view(['GET'])
+def dashboard_stats(request):
+    stats = {
+        'total_users': User.objects.count(),
+        'total_contacts': Contact.objects.count(),
+        'total_messages': Message.objects.count(),
+        'total_kanbans': ContactKanban.objects.count()
+    }
+    return Response(stats)
+
+@api_view(['GET'])
+def dashboard_users(request):
+    users = User.objects.all().values('id', 'username', 'email', 'date_joined')
+    return Response(list(users))
 
 ## Login
 @method_decorator(csrf_exempt, name='dispatch')

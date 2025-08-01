@@ -11,8 +11,6 @@ class Login(ft.View):
         self.route = '/login'
         self.padding = ft.padding.all(0)
 
-        self.check_token()
-
         # Campos de login
         self.imageLogo = ft.Image(
             src="logosemfundo.png",
@@ -58,10 +56,10 @@ class Login(ft.View):
             )
         )
 
-        # Lembrar-se de mim
+        # Lembrar-se de mim - marca se já existe token salvo
         self.radio_remember = ft.Checkbox(
             label="Lembrar-se de mim",
-            value=False
+            value=bool(self.page.client_storage.get("token"))
             )
 
         self.controls = [
@@ -117,10 +115,16 @@ class Login(ft.View):
                 data = response.json()
                 token = data.get("token")
                 expiry = data.get("expiry")
+                
                 if self.radio_remember.value:
-                # Salva token e expiry localmente
+                    # Salva token e expiry localmente
                     self.page.client_storage.set("token", token)
                     self.page.client_storage.set("expiry", expiry)
+                else:
+                    # Remove tokens salvos se checkbox não estiver marcado
+                    self.page.client_storage.remove("token")
+                    self.page.client_storage.remove("expiry")
+                    
                 self.page.go('/')
             else:
                 self.page.snack_bar = ft.SnackBar(
@@ -140,11 +144,20 @@ class Login(ft.View):
     def check_token(self):
         token = self.page.client_storage.get("token")
         expiry = self.page.client_storage.get("expiry")
-        from datetime import datetime
+        
         if token and expiry:
-            # Verifica se o token não expirou
-            if datetime.now(timezone.utc) < datetime.fromisoformat(expiry.replace("Z", "+00:00")):
-                self.page.go('/')
+            try:
+                # Verifica se o token não expirou
+                if datetime.now(timezone.utc) < datetime.fromisoformat(expiry.replace("Z", "+00:00")):
+                    self.page.go('/')
+                else:
+                    # Token expirado, remove do storage
+                    self.page.client_storage.remove("token")
+                    self.page.client_storage.remove("expiry")
+            except Exception:
+                # Erro ao processar data, remove tokens inválidos
+                self.page.client_storage.remove("token")
+                self.page.client_storage.remove("expiry")
 
 class ChatBackground(ft.Container):
     def __init__(
