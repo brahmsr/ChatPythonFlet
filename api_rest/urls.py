@@ -9,4 +9,17 @@ urlpatterns = [
     path('kanban/', views.contact_kanban_list, name='contact_kanban'),
     
     path('contacts/<str:name>', views.contact_list, name='contact_detail'),
+    # path('kanban/<int:pk>/', views.contact_kanban_detail, name='contact_kanban_detail'),
+    # path('kanban/<int:pk>/update/', views.contact_kanban_update, name='contact_kanban_update'),
+    # path('kanban/<int:pk>/delete/', views.contact_kanban_delete, name='contact_kanban_delete'),
+    # path('kanban/create/', views.contact_kanban_create, name='contact_kanban_create'),
+    # path('kanban/<int:pk>/messages/', views.message_list, name='message_list'),
+    # path('kanban/<int:pk>/messages/create/', views.message_create, name='message_create'),
+    # path('kanban/<int:pk>/messages/<int:message_pk>/', views.message_detail, name='message_detail'),
+    # path('kanban/<int:pk>/messages/<int:message_pk>/update/', views.message_update, name='message_update'),
+    # path('kanban/<int:pk>/messages/<int:message_pk>/delete/', views.message_delete, name='message_delete'),
+    
+    path('login/', views.login_view, name='login'),
+    path('logout/', views.logout_view, name='logout'),
+    # path('register/', views.register_view, name='register')
 ]
