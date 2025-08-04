@@ -1,22 +1,33 @@
 # Commands
 
-start venv:
+1- Install venv: 
+```
+python -m venv .venv
+```
 
+2- Install dependencies:
+```
+pip i -r requirements.txt
+```
+3- Run migrations
+```
+py manage.py migrate
+```
+
+3- start venv:
 ```
 .venv/scripts/activate
 ```
 
-run front: 
-```
-flet run app
-```
-
-run backend:
+4- run backend:
 ```
 py manage.py runserver
 ```
 
-Install dependencies:
+5- run front: 
 ```
-pip i -r requirements.txt
+flet run app
 ```
+
+
+
