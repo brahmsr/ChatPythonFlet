@@ -5,6 +5,10 @@ start venv:
 ```
 .venv/scripts/activate
 ```
+run migrations:
+```
+py manage.py migrate
+```
 
 run front: 
 ```

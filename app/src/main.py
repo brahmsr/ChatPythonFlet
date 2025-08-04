@@ -2,52 +2,30 @@ import flet as ft
 from Views.Home import (ft, Home)
 from Views.Login import Login
 from Components.NavigationRail import NavigationRail
+from Views.MainView import MainView
 
 def main(page: ft.Page):
     page.title = 'IAm Chat'
+    page.window.width = 320
+    page.window.height = 568
+    page.window.resizable = False
+    page.window.frameless = True
+    page.window.icon = ft.Image('logosemfundo.png')
 
     # Componentes de navegação
     nav_rail = NavigationRail(page=page)
 
     # Views
-    home = Home(page=page)
     login = Login(page=page)
-
-    # Handler de componentes
-    def handle_navigation_change(e):
-        selected_index = e.control.selected_index
-        if selected_index == 0: # Dashboard
-            page.go('/')
-        elif selected_index == 1: # Chat
-            page.go('/login')
-        elif selected_index == 2: # Configurações
-            page.go('/settings')
-    
-    nav_rail.on_change = handle_navigation_change
+    main_view = None
 
     def router(route):
+        nonlocal main_view
         page.views.clear()
         
         if page.route == '/':
-            # Layout com NavigationRail
-            main_view = ft.View(
-                route='/',
-                controls=[
-                    ft.Row(
-                        controls=[
-                            nav_rail,
-                            ft.VerticalDivider(width=1),
-                            ft.Container(
-                                content=home,
-                                expand=True
-                            )
-                        ],
-                        spacing=0,
-                        expand=True
-                    )
-                ],
-                padding=ft.padding.all(0)
-            )
+            if main_view is None:
+                main_view = MainView(page=page)  # Cria apenas após login
             page.views.append(main_view)
         elif page.route == '/login':
             page.views.append(login)
@@ -56,7 +34,6 @@ def main(page: ft.Page):
 
     page.on_route_change = router
     
-    # Verifica se há token válido para decidir rota inicial
     def check_initial_route():
         from datetime import datetime, timezone
         token = page.client_storage.get("token")

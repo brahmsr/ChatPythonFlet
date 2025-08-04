@@ -9,6 +9,7 @@ class NavigationRail(ft.NavigationRail):
         self.min_width = 100
         self.min_extended_width = 160
         self.bgcolor = ft.Colors.GREEN_50
+        self.visible = True
         
         self.destinations = [
             ft.NavigationRailDestination(
@@ -37,6 +38,10 @@ class NavigationRail(ft.NavigationRail):
         
         if on_destination_change:
             self.on_change = on_destination_change
+    
+    def toggle_visibility(self):
+        self.visible = not self.visible
+        self.update()
     
     def logout(self, e):
         # Remove tokens salvos
