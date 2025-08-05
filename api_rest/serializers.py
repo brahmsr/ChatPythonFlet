@@ -9,11 +9,13 @@ class UserSerializer(serializers.ModelSerializer):
 class ContactSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contact
+        ordering = ['-timestamp']
         fields = '__all__'
 
 class MessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
+        ordering = ['-timestamp']
         fields = '__all__'
 
 class ContactKanbanSerializer(serializers.ModelSerializer):

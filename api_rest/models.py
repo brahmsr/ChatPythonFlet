@@ -47,7 +47,8 @@ class Contact(models.Model):
 
     def __str__(self):
         return f'Contact: {self.name} with {self.telephone}'
-    
+
+### Message Model    
 class Message(models.Model):
     id = models.AutoField(primary_key=True)
     contact = models.ForeignKey(Contact, on_delete=models.CASCADE, related_name='messages')
