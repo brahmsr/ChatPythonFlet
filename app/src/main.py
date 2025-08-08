@@ -9,7 +9,7 @@ def main(page: ft.Page):
     page.window.width = 320
     page.window.height = 568
     page.window.resizable = False
-    page.window.frameless = True
+    page.window.frameless = False
     page.window.icon = ft.Image('logosemfundo.png')
 
     # Componentes de navegação

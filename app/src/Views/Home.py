@@ -34,7 +34,7 @@ class Home(ft.View):
             columns=[
                 ft.DataColumn(ft.Text("ID")),
                 ft.DataColumn(ft.Text("Username")),
-                ft.DataColumn(ft.Text("Email")),
+                ft.DataColumn(ft.Text("Contato")),
                 ft.DataColumn(ft.Text("Data Cadastro"))
             ],
             rows=[]

@@ -12,11 +12,14 @@ class MainView(ft.View):
         self.route = '/main'
         self.padding = ft.padding.all(0)
         
-        # NavigationRail
+        # NavigationDrawer
         self.nav_rail = NavigationRail(page=page, on_destination_change=self.handle_navigation)
         
         # AppBar
         self.appbar = AppBar(page=page, nav_rail=self.nav_rail)
+        
+        # Define o drawer na página
+        self.drawer = self.nav_rail
         
         # Inicializa as views
         self.home_view = Home(page=page)
@@ -30,15 +33,7 @@ class MainView(ft.View):
         )
         
         self.controls = [
-            ft.Row(
-                controls=[
-                    self.nav_rail,
-                    ft.VerticalDivider(width=1),
-                    self.content_container
-                ],
-                spacing=0,
-                expand=True
-            )
+            self.content_container
         ]
     
     def handle_navigation(self, e):
@@ -51,4 +46,6 @@ class MainView(ft.View):
         elif selected_index == 2:  # Settings
             self.content_container.content = ft.Column(controls=self.settings_view.controls, expand=True)
         
+        # Fecha o drawer após navegação
+        self.nav_rail.open = False
         self.page.update()
