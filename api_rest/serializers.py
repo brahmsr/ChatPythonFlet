@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Contact, Message, ContactKanban, User
+from .models import Contact, Message, ContactKanban, User, WhatsappVariables
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -27,3 +27,13 @@ class LoginSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['username', 'password']
+
+class WhatsappVariablesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WhatsappVariables
+        fields = '__all__'
+
+class WhatsappVariablesEdit(serializers.ModelSerializer):
+    class Meta:
+        model = WhatsappVariables
+        fields = ['name', 'value']
