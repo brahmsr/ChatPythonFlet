@@ -58,6 +58,7 @@ def contact_update(request, id: str):
             return Response(serializer.data)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
 def contact_delete(request, id: str):
