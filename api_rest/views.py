@@ -17,7 +17,7 @@ from django.contrib.auth.models import User
 from .auth.login import LoginAPI
 
 ### WhatsApp Variables
-from .view.WhatsappVars import get_whatsapp_variables, create_whatsapp_variables, update_whatsapp_variables, delete_whatsapp_variables
+from .view.WhatsappVars import whatsapp_variables_get, create_whatsapp_variables, update_whatsapp_variables, delete_whatsapp_variables
 
 ## Contatos
 from .view.Contatos import get_contacts, contact_create, contact_update, contact_delete
@@ -26,7 +26,7 @@ from .view.Contatos import get_contacts, contact_create, contact_update, contact
 from .view.Mensagens import get_messages, message_create, message_update, message_delete
 
 ## Kanban
-
+from .view.Kanban import contact_kanban_get
 
 ## Dashboard
 @api_view(['GET'])

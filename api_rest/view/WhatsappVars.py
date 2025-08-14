@@ -9,7 +9,7 @@ from rest_framework import status
 ### Obtenção das variáveis
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def get_whatsapp_variables(request, name):
+def whatsapp_variables_get(request, name):
     if request.method == 'GET':
         try:
             variables = WhatsappVariables.objects.get(name=name, user=request.user)

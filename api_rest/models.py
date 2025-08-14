@@ -14,7 +14,7 @@ class Enterprise(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     name = models.CharField(null=False, blank=False)
-    lastname = models.CharField(blank=True)
+    lastname = models.CharField(null=True, blank=True)
     phone = models.CharField(max_length=20, blank=True)
     avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
     enterprise = models.ForeignKey(Enterprise, on_delete=models.SET_NULL, null=True, blank=True, related_name='employees')
@@ -37,7 +37,7 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
         try:
             profile = instance.profile
             profile.name = instance.first_name or "Nome"
-            profile.lastname = instance.last_name or ""
+            profile.lastname = instance.last_name or "Sobrenome"
             profile.phone = instance.phone or ""
             profile.avatar = instance.avatar or ""
             profile.enterprise = instance.enterprise or None
@@ -46,7 +46,7 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
             Profile.objects.create(
                 user=instance,
                 name=instance.first_name or "Nome",
-                lastname=instance.last_name or "",
+                lastname=instance.last_name or "Sobrenome",
                 phone=instance.phone or "",
                 avatar=instance.avatar or "",
                 enterprise=instance.enterprise or None
@@ -98,3 +98,9 @@ class WhatsappVariables(models.Model):
 
     def __str__(self):
         return f'Variable: {self.name} - {self.value}'
+    
+class SessionWhatsApp(models.Model):
+    id = models.AutoField(primary_key=True)
+    session_name = models.CharField(max_length=150, default='', db_index=True)
+    session_data = models.TextField(default='', db_index=True)
+    enterprise = models.ForeignKey(Enterprise, on_delete=models.CASCADE, related_name='whatsapp_sessions')
