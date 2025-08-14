@@ -13,7 +13,7 @@ urlpatterns = [
     path('contacts/<int:id>/delete/', views.contact_delete, name='contact_delete'),
     
     path('messages/', views.get_messages, name='message_list'),
-    path('kanban/', views.contact_kanban_get, name='contact_kanban'),
+    path('kanban/', views.get_contact_kanban, name='contact_kanban'),
     
     path('contacts/<str:name>', views.get_contacts, name='contact_detail'),
     # path('kanban/<int:pk>/', views.contact_kanban_detail, name='contact_kanban_detail'),

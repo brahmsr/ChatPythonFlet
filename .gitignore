@@ -1,3 +1,5 @@
 .venv/
 *.sqlite3
 api_root/whatsapp_sessao/
+migrations/
+db.sqlite3
