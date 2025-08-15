@@ -3,3 +3,5 @@
 api_root/whatsapp_sessao/
 migrations/
 db.sqlite3
+/db.sqlite3
+/api_rest/migrations

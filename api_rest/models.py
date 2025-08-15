@@ -11,46 +11,32 @@ class Enterprise(models.Model):
     name = models.CharField(max_length=255, default='', db_index=True)
     logo = models.ImageField(upload_to='enterprise_logos/', null=True, blank=True)
 
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
-    name = models.CharField(null=False, blank=False)
-    lastname = models.CharField(null=True, blank=True)
-    phone = models.CharField(max_length=20, blank=True)
-    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
-    enterprise = models.ForeignKey(Enterprise, on_delete=models.SET_NULL, null=True, blank=True, related_name='employees')
 
-    def __str__(self):
-        return f'Perfil de {self.user.username}'
 
 @receiver(post_save, sender=User)
 def create_or_update_user_profile(sender, instance, created, **kwargs):
     if created:
+        # Cria o perfil com valores padrões para campos que não existem no User
         Profile.objects.create(
             user=instance,
             name=instance.first_name or "Nome",
             lastname=instance.last_name or "Sobrenome",
-            phone=instance.phone or "",
-            avatar=instance.avatar or "",
-            enterprise=instance.enterprise or None
+            phone="449999-9999",  # padrão
+            avatar=None,  # padrão
+            enterprise=None  # padrão
         )
     else:
-        try:
-            profile = instance.profile
-            profile.name = instance.first_name or "Nome"
-            profile.lastname = instance.last_name or "Sobrenome"
-            profile.phone = instance.phone or ""
-            profile.avatar = instance.avatar or ""
-            profile.enterprise = instance.enterprise or None
-            profile.save()
-        except Profile.DoesNotExist:
-            Profile.objects.create(
-                user=instance,
-                name=instance.first_name or "Nome",
-                lastname=instance.last_name or "Sobrenome",
-                phone=instance.phone or "",
-                avatar=instance.avatar or "",
-                enterprise=instance.enterprise or None
-            )
+        # Atualiza ou cria o perfil se não existir
+        Profile.objects.update_or_create(
+            user=instance,
+            defaults={
+                "name": instance.first_name or "Nome",
+                "lastname": instance.last_name or "Sobrenome",
+                "phone": "449999-9999",  # mantém padrão
+                "avatar": None,
+                "enterprise": None
+            }
+        )
     
 class Contact(models.Model):
     id = models.AutoField(primary_key=True)
