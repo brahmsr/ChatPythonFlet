@@ -1,5 +1,6 @@
 from django.db import models
-from models import User, Contact
+from .Contact import Contact
+from ..models import User
 
 class ContactKanban(models.Model):
     STATUS_CHOICES = [

@@ -1,5 +1,5 @@
 from django.db import models
-from models import Enterprise
+from .Enterprise import Enterprise
 
 class SessionWhatsApp(models.Model):
     id = models.AutoField(primary_key=True)

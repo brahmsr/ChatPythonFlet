@@ -1,6 +1,6 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from ..models import Message
+from ..Model import Message
 from ..serializers import MessageSerializer
 from rest_framework.response import Response
 from rest_framework import status
@@ -11,17 +11,17 @@ import json
 def get_messages(request, id: str):
     if request.method == 'GET':
         try:
-            messages = Message.objects.all()
+            messages = Message.Message.objects.all()
             
             serializer = MessageSerializer(messages, many=True)
             return Response(serializer.data)
-        except Message.DoesNotExist:
+        except Message.Message.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
     elif id is not None:
         if request.method == 'GET':
             try:
-                message = Message.objects.get(id=id)
-            except Message.DoesNotExist:
+                message = Message.Message.objects.get(id=id)
+            except Message.Message.DoesNotExist:
                 return Response(status=status.HTTP_404_NOT_FOUND)
             serializer = MessageSerializer(message)
             return Response(serializer.data)
@@ -46,8 +46,8 @@ def message_create(request):
 def message_update(request, id: str):
     if request.method == 'PUT':
         try:
-            message = Message.objects.get(id=id)
-        except Message.DoesNotExist:
+            message = Message.Message.objects.get(id=id)
+        except Message.Message.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         data = json.loads(request.body)
         serializer = MessageSerializer(message, data=data)
@@ -61,8 +61,8 @@ def message_update(request, id: str):
 def message_delete(request, id: str):
     if request.method == 'DELETE':
         try:
-            message = Message.objects.get(id=id)
-        except Message.DoesNotExist:
+            message = Message.Message.objects.get(id=id)
+        except Message.Message.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         message.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

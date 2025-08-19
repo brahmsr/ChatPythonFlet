@@ -1,6 +1,6 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from ..models import WhatsappVariables
+from ..Model import WhatsappVariables
 from rest_framework.response import Response
 import json
 from ..serializers import WhatsappVariablesSerializer, WhatsappVariablesEdit
@@ -12,7 +12,7 @@ from rest_framework import status
 def whatsapp_variables_get(request, name):
     if request.method == 'GET':
         try:
-            variables = WhatsappVariables.objects.get(name=name, user=request.user)
+            variables = WhatsappVariables.WhatsappVariables.objects.get(name=name, user=request.user)
             if variables:
                 serializer = WhatsappVariablesSerializer(variables)
                 return Response(serializer.data)
@@ -47,7 +47,7 @@ def create_whatsapp_variables(request):
 def update_whatsapp_variables(request, id: str):
 
     if request.method == 'PUT':
-        variables = WhatsappVariables.objects.get(id=id, name=request.body['name'], user=request.user)
+        variables = WhatsappVariables.WhatsappVariables.objects.get(id=id, name=request.body['name'], user=request.user)
         if variables:
             try:
                 data = json.loads(request.body)
@@ -71,8 +71,8 @@ def delete_whatsapp_variables(request, id: str):
     # deleta uma variável
     if request.method == 'DELETE':
         try:
-            variables = WhatsappVariables.objects.get(id=id, user=request.user)
-        except WhatsappVariables.DoesNotExist:
+            variables = WhatsappVariables.WhatsappVariables.objects.get(id=id, user=request.user)
+        except WhatsappVariables.WhatsappVariables.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         variables.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

@@ -1,6 +1,6 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from ..models import ContactKanban
+from ..Model import KanbanContact
 from ..serializers import ContactKanbanSerializer
 from rest_framework.response import Response
 from rest_framework import status
@@ -12,7 +12,7 @@ def get_contact_kanban(request, id: str):
     
     # Get all kanbans
     if request.method == 'GET':
-        kanbans = ContactKanban.objects.all()
+        kanbans = KanbanContact.ContactKanban.objects.all()
         
         serializer = ContactKanbanSerializer(kanbans, many=True)
         return Response(serializer.data)
@@ -20,8 +20,8 @@ def get_contact_kanban(request, id: str):
     # Get a specific kanban by ID
     elif request.method == 'GET' and id is not None:
         try:
-            kanban = ContactKanban.objects.get(id=id)
-        except ContactKanban.DoesNotExist:
+            kanban = KanbanContact.ContactKanban.objects.get(id=id)
+        except KanbanContact.ContactKanban.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         
         serializer = ContactKanbanSerializer(kanban)
@@ -42,8 +42,8 @@ api_view(['PUT'])
 def update_contact_kanban(request, id: str):
     if request.method == 'PUT':
         try:
-            kanban = ContactKanban.objects.get(id=id)
-        except ContactKanban.DoesNotExist:
+            kanban = KanbanContact.ContactKanban.objects.get(id=id)
+        except KanbanContact.ContactKanban.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         
         serializer = ContactKanbanSerializer(kanban, data=request.data)
@@ -57,8 +57,8 @@ def update_contact_kanban(request, id: str):
 def delete_contact_kanban(request, id: str):
     if request.method == 'DELETE':
         try:
-            kanban = ContactKanban.objects.get(id=id)
-        except ContactKanban.DoesNotExist:
+            kanban = KanbanContact.ContactKanban.objects.get(id=id)
+        except KanbanContact.ContactKanban.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         
         kanban.delete()

@@ -1,5 +1,12 @@
 from rest_framework import serializers
-from .models import Contact, Message, ContactKanban, User, WhatsappVariables
+from .Model.Contact import Contact
+from .Model.Message import Message
+from .Model.KanbanContact import ContactKanban
+from .Model.Profile import Profile
+from .Model.Enterprise import Enterprise
+from .Model.SessionWhatsapp import SessionWhatsApp
+from .Model.WhatsappVariables import WhatsappVariables
+from django.contrib.auth.models import User
 
 ## User
 class UserSerializer(serializers.ModelSerializer):

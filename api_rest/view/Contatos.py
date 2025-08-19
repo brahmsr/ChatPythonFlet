@@ -1,6 +1,6 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from ..models import Contact
+from ..Model import Contact
 from rest_framework.response import Response
 import json
 from ..serializers import ContactSerializer
@@ -11,7 +11,7 @@ from rest_framework import status
 def get_contacts(request, id: str):
     # retorna todos os contatos
     if request.method == 'GET':
-        contacts = Contact.objects.all()
+        contacts = Contact.Contact.objects.all()
         
         serializer = ContactSerializer(contacts, many=True)
         return Response(serializer.data)
@@ -20,7 +20,7 @@ def get_contacts(request, id: str):
     elif id != None:
         if request.method == 'GET':
             try:
-                contact = Contact.objects.get(id=id)
+                contact = Contact.Contact.objects.get(id=id)
             except Contact.DoesNotExist:
                 return Response(status=status.HTTP_404_NOT_FOUND)
             serializer = ContactSerializer(contact)
@@ -34,7 +34,7 @@ def contact_update(request, id: str):
     # atualiza um contato
     if request.method == 'PUT':
         try:
-            contact = Contact.objects.get(id=id)
+            contact = Contact.Contact.objects.get(id=id)
 
         except Contact.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
@@ -54,8 +54,8 @@ def contact_delete(request, id: str):
     # deleta um contato
     if request.method == 'DELETE':
         try:
-            contact = Contact.objects.get(id=id)
-        except Contact.DoesNotExist:
+            contact = Contact.Contact.objects.get(id=id)
+        except Contact.Contact.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         contact.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

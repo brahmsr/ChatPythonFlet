@@ -1,17 +1,12 @@
 
 from django.contrib.auth.models import User
-
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.db import models
 
 # Create your models here.
 
-from Model.Profile import Profile
-from Model.Enterprise import Enterprise
-from Model.Contact import Contact
-from Model.Message import Message
-from Model.KanbanContact import ContactKanban
-from Model.WhatsappVariables import WhatsappVariables
+from .Model.Profile import Profile
 
 @receiver(post_save, sender=User)
 def create_or_update_user_profile(sender, instance, created, **kwargs):

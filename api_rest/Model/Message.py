@@ -1,5 +1,5 @@
 from django.db import models
-from models import Contact
+from .Contact import Contact
 
 class Message(models.Model):
     id = models.AutoField(primary_key=True)
