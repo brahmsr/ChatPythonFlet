@@ -5,30 +5,32 @@
 python -m venv .venv
 ```
 
-2- Install dependencies:
-```
-pip i -r requirements.txt
-```
-3- Run migrations
-```
-py manage.py migrate
-```
-
-3- start venv:
+2- start venv:
 ```
 .venv/scripts/activate
 ```
-run migrations:
+
+3- Install dependencies:
+```
+pip i -r requirements.txt
+```
+
+4- create migration
+```
+py manage.py makemigrations
+```
+
+5- run migrations:
 ```
 py manage.py migrate
 ```
 
-4- run backend:
+6- run backend:
 ```
 py manage.py runserver
 ```
 
-5- run front: 
+7- run front: 
 ```
 flet run app
 ```
