@@ -5,3 +5,4 @@ migrations/
 db.sqlite3
 /db.sqlite3
 /api_rest/migrations
+*.pyc

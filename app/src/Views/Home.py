@@ -11,6 +11,15 @@ class Home(ft.View):
         self.page = page
         self.route = '/'
         self.padding = ft.padding.all(0)
+
+        # Saudacao e informacoes do usuario
+        nome = page.client_storage.get("name") or "Usuário"
+        self.texto_boas_vindas = ft.Text(
+            f"Bem-vindo ao Painel de Controle {nome}!",
+            size=24,
+            weight=ft.FontWeight.BOLD,
+            color=ft.Colors.GREEN_900
+        )
         
         # Dashboard data
         self.stats_data = {}
@@ -24,12 +33,14 @@ class Home(ft.View):
             color=ft.Colors.GREEN_900
         )
         
+        # Stats cards
         self.stats_cards = ft.Row(
             controls=[],
             alignment=ft.MainAxisAlignment.CENTER,
             spacing=20
         )
         
+        # Users table
         self.users_table = ft.DataTable(
             columns=[
                 ft.DataColumn(ft.Text("ID")),
@@ -61,6 +72,7 @@ class Home(ft.View):
                             content=ft.Column(
                                 controls=[
                                     self.title,
+                                    self.texto_boas_vindas,
                                     self.refresh_button,
                                     self.stats_cards,
                                 ],

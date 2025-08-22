@@ -119,11 +119,25 @@ class Login(ft.View):
         }
         try:
             response = requests.post(url, json=payload)
-            if response.status_code == 200:
+            if response.ok:
                 # Login bem-sucedido
                 data = response.json()
                 token = data.get("token")
                 expiry = data.get("expiry")
+
+                user = data.get("user", {})
+                profile = user.get("profile", {})
+
+                name = profile.get("name")
+                last_name = profile.get("lastname")
+                phone = profile.get("phone")
+                avatar = profile.get("avatar")
+
+                # Salvar as infos no client_storage localmente
+                self.page.client_storage.set("name", name)
+                self.page.client_storage.set("last_name", last_name)
+                self.page.client_storage.set("phone", phone)
+                self.page.client_storage.set("avatar", avatar)
                 
                 if self.radio_remember.value:
                     # Salva token e expiry localmente
@@ -135,16 +149,19 @@ class Login(ft.View):
                     self.page.client_storage.remove("expiry")
                     
                 self.page.go('/')
+                self.page.update()
             else:
                 error_message(self.page, 'Login/Senha incorretos', ft.Icons.INFO)
         except Exception as ex:
-            error = 'Erro ao fazer login: ' + ex
+            error = f'Erro ao fazer login: {ex.__str__}'
+            error = f'Erro ao fazer login: {str(ex)}'
             error_message(self.page, error, ft.Icons.ERROR, ft.Colors.RED)
-        finally:
+
             # Restaurar estado do botão
             self.login_button.disabled = False
             self.login_button.text = "Login"
             self.page.update()
+
 
     ### Checar se o token está ativo    
     def check_token(self, e):
